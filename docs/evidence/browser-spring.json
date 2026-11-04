@@ -1,0 +1,12 @@
+{
+  "date": "2026-11-04",
+  "runtime": "Spring Boot 4.1.2, Java 17",
+  "transport": "Headless Chromium HTTPS/HTTP2 -> Spring WebFlux",
+  "storage": "Bounded test-only in-memory ObjectStreams; not S3",
+  "roundTrip": { "bytes": 45, "commitConfirmed": true, "downloadBytesEqual": true, "browserPageErrors": 0 },
+  "applicationRoute": { "path": "/example/status", "status": 200, "body": { "application": "ready" } },
+  "missingObject": { "status": 404, "code": "NOT_FOUND" },
+  "knownLengthCancellation": { "declaredBytes": 1048576, "clientCode": "ABORTED", "uploadOutcome": "unknown", "subsequentGetStatus": 404 },
+  "unknownLengthCancellation": { "clientCode": "ABORTED", "uploadOutcome": "unknown", "subsequentGetStatus": 200, "storedBytes": 8192, "transportCauseEstablished": false },
+  "limitations": ["Cancellation does not promise rollback", "A known length detects a short body", "No actual S3 assertion follows from this fixture"]
+}

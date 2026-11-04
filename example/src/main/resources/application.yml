@@ -1,0 +1,23 @@
+server:
+  address: 127.0.0.1
+  port: 19443
+  http2:
+    enabled: true
+  compression:
+    enabled: false
+  ssl:
+    enabled: true
+    certificate: ${DEMO_TLS_CERT}
+    certificate-private-key: ${DEMO_TLS_KEY}
+file-streams:
+  enabled: true
+  s3:
+    bucket: ${S3_BUCKET:stream-tests}
+    region: ${S3_REGION:garage}
+    endpoint: ${S3_ENDPOINT:http://127.0.0.1:19390}
+  limits:
+    max-object-size: 512MB
+    max-buffer-size: 1MB
+    max-concurrent-transfers: 2
+  http:
+    enabled: true

@@ -1,0 +1,29 @@
+name: Verify
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  java:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: ['17', '21', '25', '27']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: file-streams-spring-boot-starter
+      - uses: actions/checkout@v4
+        with:
+          repository: 59Alex/file-streams
+          path: file-streams
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Build local base artifacts
+        working-directory: file-streams
+        run: ./gradlew build publishToMavenLocal -Dmaven.repo.local="$PWD/build/local-repository" --no-daemon --max-workers=2
+      - name: Verify starter and compile examples
+        working-directory: file-streams-spring-boot-starter
+        run: ./gradlew build :example:installDist :example:transportFixtureClasses --no-daemon --max-workers=2
