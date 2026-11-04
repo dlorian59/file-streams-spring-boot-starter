@@ -2,6 +2,13 @@
 
 [← Versions / Версии](index.md) · [README](../README.md)
 
+## Documentation follow-up / Дополнение документации — 2026-11-05
+
+Full EN/RU configuration references now cover every property, default, validation rule, conditional bean/backoff/lifecycle, HTTP status and application integration boundary. Compiled override examples show custom limits, credentials/client, handler and mapping order. No starter production behavior changed; only affected example compilation and navigation were checked. The temporary real Boot HTTP/2 fixture also served the React companion's native Action form smoke test and was stopped afterward; it remained test-only memory storage, not S3.
+
+Полные EN/RU справочники описывают все properties/defaults/validation, условия beans/backoff/cleanup, HTTP-статусы и границы интеграции. Override-примеры лимитов, credentials/client, handler и mapping скомпилированы. Production starter не изменялся; повторно проверены только затронутые примеры и навигация. Временный Boot HTTP/2 fixture использовался React companion для native Action form smoke и остановлен после проверки; это тестовое хранилище в памяти, не S3.
+
+
 | Check / Проверка | Result / Результат |
 | --- | --- |
 | Spring Boot 4.1.2, Java 17 / 21 / 25 | Six auto-configuration tests pass on each runtime: imports, defaults, typed bounds, invalid settings, backoff, resource lifecycle, HTTP opt-in. / По шесть тестов на каждой JDK. |

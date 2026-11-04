@@ -10,4 +10,6 @@ The Java 17 bytecode baseline uses records for typed configuration. Java 21/25/2
 
 Базовый bytecode Java 17 использует records для типизированной конфигурации. На Java 21/25/27 применяется тот же API; специальных возможностей новых версий и preview-флагов нет.
 
+[Complete reference EN](0.1.0/reference-en.md) · [Полный справочник RU](0.1.0/reference-ru.md)
+
 [← README](../README.md)

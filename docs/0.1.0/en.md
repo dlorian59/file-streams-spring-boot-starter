@@ -4,6 +4,8 @@
 
 [Build](#1-build-locally) · [S3](#2-stream-to-s3) · [HTTP](#3-browser-to-java-contract) · [Overrides](#4-reuse-application-beans) · [Run](#5-run-the-paired-browser-and-backend-example) · [Tests and limits](#6-verification-and-boundaries)
 
+[Complete API, options, errors and troubleshooting](reference-en.md)
+
 ## 1. Build locally
 
 Check out `file-streams` and this repository next to each other. Use JDK 17+; the build targets Java 17. The base projects retain the same API on 21/25/27, without preview features. Node 20+ is needed for browser examples; OpenSSL creates local TLS certificates.
@@ -60,8 +62,8 @@ No controller or S3-client bean is needed. [Complete application](../../example/
 | `s3.bucket` | unset | Required when creating `ObjectStreams`. |
 | `s3.region` | unset | Required when creating the AWS client. |
 | `s3.endpoint` | unset | AWS endpoint by default; optional HTTP(S) compatible-storage URL. |
-| `limits.max-object-size` | `16GB` | Maximum declared/actual stream length. |
-| `limits.max-buffer-size` | `1MB` | Maximum individual source/network buffer. |
+| `limits.max-object-size` | `16GB` | Maximum declared/actual upload length; not a download-size cap. |
+| `limits.max-buffer-size` | `1MB` | Maximum individual upload source/network buffer. |
 | `limits.max-concurrent-transfers` | `2` | Shared upload/download admission slots; excess requests fail with `BUSY`. |
 | `http.enabled` | `false` | Expose `/objects/**` in a reactive web application. |
 

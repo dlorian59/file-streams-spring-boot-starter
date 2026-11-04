@@ -29,7 +29,7 @@ file-streams:
 
 AWS credentials use the normal SDK chain (environment, profile, workload role). No access keys belong in this configuration. Omitting `s3.endpoint` uses AWS; set it for compatible storage. HTTP exposure and the integration itself are disabled by default.
 
-[Version 0.1.0: build, scenarios and examples](docs/0.1.0/en.md) · [All versions](docs/index.md)
+[Version 0.1.0: build, scenarios and examples](docs/0.1.0/en.md) · [All versions](docs/index.md) · [Complete reference](docs/0.1.0/reference-en.md)
 
 Java 17+, Spring Boot 4.1.2, `file-streams` 0.1.0. Build the base library into its isolated local Maven repository first, then run `./gradlew build :example:installDist`; the [guide](docs/0.1.0/en.md#1-build-locally) has exact commands. Artifacts are prepared locally; registry publication and remote repository creation have not been completed.
 
@@ -66,7 +66,7 @@ file-streams:
 
 AWS credentials берутся из стандартной цепочки SDK: окружение, профиль или роль среды исполнения. Ключи доступа не входят в эту конфигурацию. Без `s3.endpoint` используется AWS; для совместимого хранилища задайте endpoint. Интеграция и HTTP-маршруты по умолчанию выключены.
 
-[Руководство 0.1.0: сборка, сценарии и примеры](docs/0.1.0/ru.md) · [Все версии](docs/index.md)
+[Руководство 0.1.0: сборка, сценарии и примеры](docs/0.1.0/ru.md) · [Все версии](docs/index.md) · [Полный справочник](docs/0.1.0/reference-ru.md)
 
 Java 17+, Spring Boot 4.1.2, `file-streams` 0.1.0. Сначала соберите базовую библиотеку в её отдельный Maven-каталог, затем выполните `./gradlew build :example:installDist`; точные команды приведены в [руководстве](docs/0.1.0/ru.md#1-локальная-сборка). Артефакты подготовлены локально; публикация пакетов и создание удалённого репозитория ещё не выполнены.
 
