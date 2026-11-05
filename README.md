@@ -113,6 +113,8 @@ Cancellation or a lost response can leave the upload result unknown, including b
 
 [Integration / Подключение](docs/0.1.0/integration-en.md) · [Guide / Руководство](docs/0.1.0/en.md) · [Reference / Справочник](docs/0.1.0/reference-en.md) · [Versions / Версии](docs/index.md) · [Verification / Проверки](docs/VERIFICATION.md) · [MIT](LICENSE)
 
+For video attachments, add [video-streams-spring-boot-starter](https://github.com/dlorian59/video-streams-spring-boot-starter). It reuses your configured ObjectStreams, prepares fMP4 HLS through FFmpeg and serves protected segments. The [paired React example](https://github.com/dlorian59/video-streams-react/blob/main/docs/en/integration.md) connects source upload, preparation and playback.
+
 </details>
 
 <details name="readme-language" open>
@@ -227,5 +229,7 @@ await files.download(commit.key, destination);
 Отмена или потерянный ответ могут оставить результат загрузки неизвестным, в том числе до ожидаемого конца HTTP-тела неизвестной длины. Одноразовый поток автоматически не повторяется. Передавайте известный размер всегда, когда он доступен. Для браузерной загрузки нужен проверенный HTTP/2 или HTTP/3/TLS; fallback с полным буфером файла не предусмотрен.
 
 [Integration / Подключение](docs/0.1.0/integration-ru.md) · [Guide / Руководство](docs/0.1.0/ru.md) · [Reference / Справочник](docs/0.1.0/reference-ru.md) · [Versions / Версии](docs/index.md) · [Verification / Проверки](docs/VERIFICATION.md) · [MIT](LICENSE)
+
+Для видеовложений подключите [video-streams-spring-boot-starter](https://github.com/dlorian59/video-streams-spring-boot-starter). Он использует настроенный ObjectStreams, готовит fMP4 HLS через FFmpeg и выдаёт защищённые сегменты. [Парный пример React](https://github.com/dlorian59/video-streams-react/blob/main/docs/ru/integration.md) связывает загрузку исходника, подготовку и воспроизведение.
 
 </details>
