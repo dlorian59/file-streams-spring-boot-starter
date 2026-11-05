@@ -31,7 +31,7 @@ AWS credentials use the normal SDK chain (environment, profile, workload role). 
 
 [Version 0.1.0: build, scenarios and examples](docs/0.1.0/en.md) · [All versions](docs/index.md) · [Complete reference](docs/0.1.0/reference-en.md)
 
-Java 17+, Spring Boot 4.1.2, `file-streams` 0.1.0. Build the base library into its isolated local Maven repository first, then run `./gradlew build :example:installDist`; the [guide](docs/0.1.0/en.md#1-build-locally) has exact commands. Artifacts are prepared locally; registry publication and remote repository creation have not been completed.
+Java 17+, Spring Boot 4.1.2, `file-streams` 0.1.0. Build the base library into its isolated local Maven repository first, then run `./gradlew build :example:installDist`; the [guide](docs/0.1.0/en.md#1-build-locally) has exact commands. Build artifacts locally; package registry publication is not yet available.
 
 [MIT](LICENSE) · © 2026 Aleksandr Kashevarov.
 
@@ -68,7 +68,7 @@ AWS credentials берутся из стандартной цепочки SDK: �
 
 [Руководство 0.1.0: сборка, сценарии и примеры](docs/0.1.0/ru.md) · [Все версии](docs/index.md) · [Полный справочник](docs/0.1.0/reference-ru.md)
 
-Java 17+, Spring Boot 4.1.2, `file-streams` 0.1.0. Сначала соберите базовую библиотеку в её отдельный Maven-каталог, затем выполните `./gradlew build :example:installDist`; точные команды приведены в [руководстве](docs/0.1.0/ru.md#1-локальная-сборка). Артефакты подготовлены локально; публикация пакетов и создание удалённого репозитория ещё не выполнены.
+Java 17+, Spring Boot 4.1.2, `file-streams` 0.1.0. Сначала соберите базовую библиотеку в её отдельный Maven-каталог, затем выполните `./gradlew build :example:installDist`; точные команды приведены в [руководстве](docs/0.1.0/ru.md#1-локальная-сборка). Собирайте артефакты локально; пакеты пока не опубликованы в реестрах.
 
 [MIT](LICENSE) · © 2026 Aleksandr Kashevarov.
 
