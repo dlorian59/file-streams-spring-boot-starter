@@ -105,7 +105,8 @@ class FileStreamsAutoConfigurationTest {
                 .withConfiguration(AutoConfigurations.of(FileStreamsAutoConfiguration.class))
                 .withPropertyValues("file-streams.enabled=true")
                 .withBean(ObjectStreams.class, () -> mock(ObjectStreams.class));
-        web.run(context -> assertThat(context).doesNotHaveBean(ObjectStreamHandler.class));
+        web.run(context -> assertThat(context).hasSingleBean(ObjectStreamHandler.class)
+                .doesNotHaveBean("fileStreamsHandlerMapping"));
         web.withPropertyValues("file-streams.http.enabled=true").run(context -> {
             assertThat(context).hasSingleBean(ObjectStreamHandler.class).hasBean("fileStreamsHandlerMapping");
         });
@@ -113,6 +114,18 @@ class FileStreamsAutoConfigurationTest {
         web.withPropertyValues("file-streams.http.enabled=true")
                 .withBean(ObjectStreamHandler.class, () -> supplied)
                 .run(context -> assertThat(context.getBean(ObjectStreamHandler.class)).isSameAs(supplied));
+    }
+
+    @Test
+    void namedProfileBindsAndExplicitBoundsStillOverrideIt() {
+        var configured = runner.withPropertyValues("file-streams.enabled=true", "file-streams.limits.profile=attachments")
+                .withBean(ObjectStreams.class, () -> mock(ObjectStreams.class));
+        configured.run(context -> assertThat(context.getBean(StreamLimits.class))
+                .isEqualTo(io.github.alex59.filestreams.StreamProfile.ATTACHMENTS.limits()));
+        configured.withPropertyValues("file-streams.limits.max-object-size=5MB").run(context ->
+                assertThat(context.getBean(StreamLimits.class).maxBytes()).isEqualTo(5L << 20));
+        configured.withPropertyValues("file-streams.limits.profile=not-a-profile")
+                .run(context -> assertThat(context).hasFailed());
     }
 
     @Configuration(proxyBeanMethods = false)

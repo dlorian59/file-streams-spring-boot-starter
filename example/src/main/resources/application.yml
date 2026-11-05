@@ -16,8 +16,6 @@ file-streams:
     region: ${S3_REGION:garage}
     endpoint: ${S3_ENDPOINT:http://127.0.0.1:19390}
   limits:
-    max-object-size: 512MB
-    max-buffer-size: 1MB
-    max-concurrent-transfers: 2
+    profile: attachments
   http:
     enabled: true

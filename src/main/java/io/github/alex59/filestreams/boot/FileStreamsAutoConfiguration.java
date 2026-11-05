@@ -61,7 +61,6 @@ public class FileStreamsAutoConfiguration {
 
     @Configuration(proxyBeanMethods = false)
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
-    @ConditionalOnProperty(prefix = "file-streams.http", name = "enabled", havingValue = "true")
     static class HttpConfiguration {
         @Bean
         @ConditionalOnMissingBean
@@ -71,6 +70,7 @@ public class FileStreamsAutoConfiguration {
 
         @Bean
         @ConditionalOnMissingBean(name = "fileStreamsHandlerMapping")
+        @ConditionalOnProperty(prefix = "file-streams.http", name = "enabled", havingValue = "true")
         SimpleUrlHandlerMapping fileStreamsHandlerMapping(ObjectStreamHandler handler) {
             return new SimpleUrlHandlerMapping(Map.of("/objects/**", handler), -1);
         }

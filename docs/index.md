@@ -13,3 +13,5 @@ The Java 17 bytecode baseline uses records for typed configuration. Java 21/25/2
 [Complete reference EN](0.1.0/reference-en.md) · [Полный справочник RU](0.1.0/reference-ru.md)
 
 [← README](../README.md)
+
+[Existing application EN](0.1.0/integration-en.md) · [Подключение к приложению RU](0.1.0/integration-ru.md)

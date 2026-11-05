@@ -1,5 +1,7 @@
 # 0.1.0 — справочник конфигурации и интеграции
 
+[Configured integration / Готовое подключение](integration-ru.md)
+
 [← Руководство](ru.md) · [Версии](../index.md) · [README](../../README.md) · [EN](reference-en.md)
 
 [Карта возможностей](#карта-возможностей) · [Конфигурация](#конфигурация) · [Beans и ресурсы](#beans-и-ресурсы) · [HTTP и браузер](#http-и-браузер) · [Решение об AOP](#решение-об-aop) · [Диагностика](#диагностика)
@@ -30,20 +32,21 @@ Override-классы компилируются вместе с примеро�
 
 ## Конфигурация
 
-Публичные immutable records: `FileStreamsProperties(enabled, limits, s3, http)`, `Limits(maxObjectSize,maxBufferSize,maxConcurrentTransfers)`, `S3(bucket,region,endpoint)`, `Http(enabled)` и обычные accessors полей. Значения ниже — **defaults Spring binding** через @DefaultValue. При прямом new record нужно передать аргументы конструктора самостоятельно. Автоконфигурация сама регистрирует @EnableConfigurationProperties; вручную регистрировать properties не нужно.
+Публичные immutable records: `FileStreamsProperties(enabled, limits, s3, http)`, `Limits(maxObjectSize,maxBufferSize,maxConcurrentTransfers,profile)`, `S3(bucket,region,endpoint)`, `Http(enabled)` и обычные accessors полей. Значения ниже — **defaults Spring binding** через @DefaultValue. При прямом new record нужно передать аргументы конструктора самостоятельно. Автоконфигурация сама регистрирует @EnableConfigurationProperties; вручную регистрировать properties не нужно.
 
 Таблица использует полные имена. В артефакт входит сгенерированная Spring configuration metadata для автодополнения IDE.
 
 | Property | Тип / default | Проверка и действие |
 | --- | --- | --- |
 | `file-streams.enabled` | boolean / false | Только true включает автоконфигурацию starter. Выключение не удаляет beans, определённые приложением. |
-| `file-streams.limits.max-object-size` | DataSize / 16GB | Неотрицателен; 0 разрешает только пустые uploads. Default S3-адаптер также отклоняет эффективный StreamLimits.maxBytes >52 428 800 000 байт (10 000 × 5 MiB). Не ограничивает размер download существующего объекта. |
+| `file-streams.limits.profile` | StreamProfile / ARCHIVES | ATTACHMENTS 64 MiB, MEDIA 512 MiB, ARCHIVES 16 GiB; explicit max-object-size overrides / явный max-object-size заменяет предел. |
+| `file-streams.limits.max-object-size` | DataSize / profile (default 16GB) | Неотрицателен; 0 разрешает только пустые uploads. Default S3-адаптер также отклоняет эффективный StreamLimits.maxBytes >52 428 800 000 байт (10 000 × 5 MiB). Не ограничивает размер download существующего объекта. |
 | `file-streams.limits.max-buffer-size` | DataSize / 1MB | 1–2 147 483 647 байт, затем преобразуется в int. Ограничивает отдельный upload/source/network buffer. |
 | `file-streams.limits.max-concurrent-transfers` | int / 2 | Положителен; передаётся default S3ObjectStreams. Upload/download делят слоты, лишние запросы получают BUSY. Свой ObjectStreams управляет собственным admission. |
 | `file-streams.s3.bucket` | String / не задан | Непустой при создании default ObjectStreams. Bucket не создаётся, наличие/права при startup не проверяются. |
 | `file-streams.s3.region` | String / не задан | Непустой при создании default S3 client. Собственный клиент выбирает свой region. |
 | `file-streams.s3.endpoint` | URI / не задан | Null означает AWS; иначе HTTP(S) с host, без URL credentials/query/fragment. Region/credentials не встраиваются в URI. |
-| `file-streams.http.enabled` | boolean / false | True и reactive-приложение создают handler/mapping. Аутентификация, CORS, request logging и virus scanning не устанавливаются. |
+| `file-streams.http.enabled` | boolean / false | True и reactive-приложение открывают общий mapping; переиспользуемый handler существует без этого флага. Аутентификация, CORS, request logging и virus scanning не устанавливаются. |
 
 Spring DataSize использует двоичные единицы: 1KB=1024, 1MB=1 048 576, 1GB=1 073 741 824 байта. Лимиты host, сетевые буферы и память SDK учитываются отдельно. Успешный startup не доказывает наличие bucket или успешную будущую аутентификацию в S3.
 
@@ -63,8 +66,8 @@ Starter намеренно не вводит отдельные knobs для AWS
 | `fileObjectStreams` / ObjectStreams | Нет ObjectStreams приложения | Использует свой/default клиент и лимиты. Собственный ObjectStreams полностью отключает вложенную default S3/client/credentials configuration. Сам store не закрывает клиент приложения. |
 | `fileStreamsS3Client` / S3AsyncClient | Нет ObjectStreams и S3AsyncClient | Создаётся bounded client; Spring закрывает его. Для своего клиента starter не создаёт default credentials и не меняет destroy method. |
 | `fileStreamsCredentialsProvider` / DefaultCredentialsProvider | Создаётся default client, нет AwsCredentialsProvider | Стандартная цепочка; созданный provider закрывает Spring. Свой provider сохраняет объявленный жизненный цикл. |
-| `fileStreamsHttpHandler` / ObjectStreamHandler | Integration + HTTP включены, reactive-приложение | Любой ObjectStreamHandler bean имеет приоритет. Handler использует ObjectStreams и StreamLimits. |
-| `fileStreamsHandlerMapping` / SimpleUrlHandlerMapping | Те же HTTP-условия | Backoff по **точному имени bean**, а не любому HandlerMapping. По умолчанию `/objects/**` с order=-1; обычные маршруты продолжают работать. |
+| `fileStreamsHttpHandler` / ObjectStreamHandler | Integration включена, reactive-приложение | Любой ObjectStreamHandler bean имеет приоритет. Handler использует ObjectStreams и StreamLimits. |
+| `fileStreamsHandlerMapping` / SimpleUrlHandlerMapping | Integration + HTTP включены, reactive-приложение | Backoff по **точному имени bean**, а не любому HandlerMapping. По умолчанию `/objects/**` с order=-1; обычные маршруты продолжают работать. |
 
 При нескольких candidates используйте обычные Spring qualifier/primary rules; starter не выбирает произвольный bean. Внешний общий клиент можно предоставить с @Bean(destroyMethod=""), сохранив внешнее владение; если владельцем является Spring, используйте destroyMethod="close". Клиент должен соблюдать multipart/EOF/retry-контракт базового адаптера. Если заменить только credentials provider, default client продолжит создаваться.
 
@@ -124,3 +127,9 @@ runTransportFixture предназначен только для теста: 16 
 | Нет JDK 27/Garage | Отметьте непроведённую проверку. Ранее обнаружены отсутствующая цель JDK и повреждённый Docker snapshot; ремонт и новый S3-запуск не заявлены. |
 
 [← Руководство](ru.md) · [Версии](../index.md) · [README](../../README.md) · [EN](reference-en.md)
+
+## Controller integration / Подключение контроллера
+
+`ObjectStreamHandler` is now available in an enabled reactive application even with `http.enabled=false`; only `fileStreamsHandlerMapping` requires `http.enabled=true`. No generic route is exposed by the handler bean alone. The three-argument `Limits` constructor remains compatible.
+
+`ObjectStreamHandler` теперь доступен в активном reactive-приложении даже при `http.enabled=false`; `fileStreamsHandlerMapping` требует `http.enabled=true`. Сам bean handler не открывает общий маршрут. Прежний конструктор `Limits` с тремя аргументами сохранён.

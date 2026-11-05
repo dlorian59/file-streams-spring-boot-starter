@@ -1,5 +1,7 @@
 # 0.1.0 — configuration and integration reference
 
+[Configured integration / Готовое подключение](integration-en.md)
+
 [← Guide](en.md) · [Versions](../index.md) · [README](../../README.md) · [RU](reference-ru.md)
 
 [Capability map](#capability-map) · [Configuration](#configuration) · [Beans and ownership](#beans-and-ownership) · [HTTP and browser](#http-and-browser) · [AOP decision](#aop-decision) · [Troubleshooting](#troubleshooting)
@@ -16,7 +18,7 @@ The starter reuses the existing file-streams S3 and WebFlux modules. It adds con
 | Use standard credentials discovery | DefaultCredentialsProvider created by starter | No keys embedded in properties. Environment/profile/workload role resolution follows AWS SDK. |
 | Supply a named profile or own client | [ApplicationCredentials / ApplicationClient](../../example/src/main/java/configuration/FileStreamsOverrides.java) | Local `documents` profile must exist. Import both or supply another provider; own client skips default provider creation. |
 | Supply another storage implementation | `ObjectStreams` bean; [bounded fixture example](../../example/src/transportFixture/java/example/TransportFixture.java) | Interface lifecycle still applies. Fixture aggregation is test-only and is not an S3 implementation. |
-| Override handler or route precedence | [ApplicationHandler / ApplicationRouteOrder](../../example/src/main/java/configuration/FileStreamsOverrides.java) | Bean type/name backoff rules below; changing mapping does not change the handler's fixed path parser. |
+| Override handler or route precedence | [ApplicationHandler / ApplicationRouteOrder](../../example/src/main/java/configuration/FileStreamsOverrides.java) | Bean type/name backoff rules below; custom controllers can call handle(exchange,key); the ordinary handle(exchange) retains /objects path parsing. |
 | Run frontend/backend together | [TLS launcher](../../scripts/run-example.sh), [CORS and application route](../../example/src/main/java/example/FileStreamsApplication.java) | HTTP/2 TLS, permitted origins, visible response headers; no HTTP/1 streaming claim. |
 | Diagnose activation/invalid config | [Auto-configuration](../../src/main/java/io/github/alex59/filestreams/boot/FileStreamsAutoConfiguration.java), [properties](../../src/main/java/io/github/alex59/filestreams/boot/FileStreamsProperties.java), [contract tests](../../src/test/java/io/github/alex59/filestreams/boot/FileStreamsAutoConfigurationTest.java) | Enabled invalid settings fail startup; overrides do not disable binding/validation of configured properties. |
 
@@ -30,20 +32,21 @@ For a custom client/profile, import both `ApplicationClient.class` and `Applicat
 
 ## Configuration
 
-Public immutable records are `FileStreamsProperties(enabled, limits, s3, http)`, `Limits(maxObjectSize,maxBufferSize,maxConcurrentTransfers)`, `S3(bucket,region,endpoint)` and `Http(enabled)`, with their normal accessors. Defaults below are **Spring binding defaults** from `@DefaultValue`; callers constructing records directly must provide the constructor arguments. `@EnableConfigurationProperties` registration is supplied by the auto-configuration; applications need no manual registration.
+Public immutable records are `FileStreamsProperties(enabled, limits, s3, http)`, `Limits(maxObjectSize,maxBufferSize,maxConcurrentTransfers,profile)`, `S3(bucket,region,endpoint)` and `Http(enabled)`, with their normal accessors. Defaults below are **Spring binding defaults** from `@DefaultValue`; callers constructing records directly must provide the constructor arguments. `@EnableConfigurationProperties` registration is supplied by the auto-configuration; applications need no manual registration.
 
 All property names in this table are fully qualified. The build includes generated Spring configuration metadata for IDE completion.
 
 | Property | Type / default | Validation and effect |
 | --- | --- | --- |
 | `file-streams.enabled` | boolean / false | Only true activates the starter's auto-configuration. Disabling it does not remove application-defined beans. |
-| `file-streams.limits.max-object-size` | DataSize / 16GB | Nonnegative; 0 allows only empty uploads. Default S3 adapter also rejects effective StreamLimits.maxBytes >52,428,800,000 bytes (10,000 × 5 MiB). Used for upload, not existing-object download size. |
+| `file-streams.limits.profile` | StreamProfile / ARCHIVES | ATTACHMENTS 64 MiB, MEDIA 512 MiB, ARCHIVES 16 GiB; explicit max-object-size overrides / явный max-object-size заменяет предел. |
+| `file-streams.limits.max-object-size` | DataSize / profile (default 16GB) | Nonnegative; 0 allows only empty uploads. Default S3 adapter also rejects effective StreamLimits.maxBytes >52,428,800,000 bytes (10,000 × 5 MiB). Used for upload, not existing-object download size. |
 | `file-streams.limits.max-buffer-size` | DataSize / 1MB | 1–2,147,483,647 bytes, then converted to int. Bounds an upload source/network buffer. |
 | `file-streams.limits.max-concurrent-transfers` | int / 2 | Positive; passed to default S3ObjectStreams. Upload/download share slots, with BUSY instead of an unbounded queue. A custom ObjectStreams controls its own admission. |
 | `file-streams.s3.bucket` | String / unset | Nonblank when creating default ObjectStreams. No bucket creation, existence check or permission check at startup. |
 | `file-streams.s3.region` | String / unset | Nonblank when creating the default S3 client. Custom clients choose their own region. |
 | `file-streams.s3.endpoint` | URI / unset | Null means AWS endpoint; otherwise HTTP(S), host present, no URL credentials/query/fragment. Region/credential values are not embedded in the URI. |
-| `file-streams.http.enabled` | boolean / false | True plus reactive application creates handler/mapping. It does not install authentication, CORS, request logging or virus scanning. |
+| `file-streams.http.enabled` | boolean / false | True plus reactive application exposes the generic mapping; the reusable handler exists without this flag. It does not install authentication, CORS, request logging or virus scanning. |
 
 Spring DataSize uses binary units: 1KB=1024 bytes, 1MB=1,048,576 bytes, 1GB=1,073,741,824 bytes. Host-side limits, network buffers and SDK memory remain additional concerns. A successful application startup does not prove that an S3 request will authenticate or the bucket exists.
 
@@ -63,8 +66,8 @@ There is no property for endpoint prefix, CORS origins, access keys, automatic r
 | `fileObjectStreams` / ObjectStreams | No application ObjectStreams bean | Uses supplied/default S3 client and limits. Supplying ObjectStreams skips the nested default S3/client/credentials configuration entirely. The store does not close an application client itself. |
 | `fileStreamsS3Client` / S3AsyncClient | No ObjectStreams and no S3AsyncClient bean | Creates bounded client; Spring closes it. With a supplied client, the starter neither creates default credentials nor changes that client's destroy method. |
 | `fileStreamsCredentialsProvider` / DefaultCredentialsProvider | Default client is being created and no AwsCredentialsProvider bean | Uses standard chain; Spring closes the created provider. Custom provider follows its own declared lifecycle. |
-| `fileStreamsHttpHandler` / ObjectStreamHandler | Integration + HTTP enabled, reactive application | Any ObjectStreamHandler bean wins. Handler uses ObjectStreams + StreamLimits. |
-| `fileStreamsHandlerMapping` / SimpleUrlHandlerMapping | Same HTTP conditions | Backoff by **exact bean name**, not every HandlerMapping bean. Default maps `/objects/**` at order -1; normal routes still work. |
+| `fileStreamsHttpHandler` / ObjectStreamHandler | Integration enabled, reactive application | Any ObjectStreamHandler bean wins. Handler uses ObjectStreams + StreamLimits. |
+| `fileStreamsHandlerMapping` / SimpleUrlHandlerMapping | Integration + HTTP enabled, reactive application | Backoff by **exact bean name**, not every HandlerMapping bean. Default maps `/objects/**` at order -1; normal routes still work. |
 
 With multiple candidates of a required type, use normal Spring qualification/primary selection; the starter does not pick an arbitrary bean. If a shared client is owned outside Spring, expose it with `@Bean(destroyMethod="")`; when Spring owns it, declare `destroyMethod="close"`. A supplied client must support the base profile's multipart/EOF/retry guarantees. Supplying a custom credentials provider alone still allows default client creation.
 
@@ -124,3 +127,9 @@ For observability use the reactive terminal signals or host HTTP filters and dis
 | JDK 27 or Garage unavailable | Mark validation missing. The prior session found a missing JDK target and broken Docker snapshot; no repair or new S3 run is claimed. |
 
 [← Guide](en.md) · [Versions](../index.md) · [README](../../README.md) · [RU](reference-ru.md)
+
+## Controller integration / Подключение контроллера
+
+`ObjectStreamHandler` is now available in an enabled reactive application even with `http.enabled=false`; only `fileStreamsHandlerMapping` requires `http.enabled=true`. No generic route is exposed by the handler bean alone. The three-argument `Limits` constructor remains compatible.
+
+`ObjectStreamHandler` теперь доступен в активном reactive-приложении даже при `http.enabled=false`; `fileStreamsHandlerMapping` требует `http.enabled=true`. Сам bean handler не открывает общий маршрут. Прежний конструктор `Limits` с тремя аргументами сохранён.

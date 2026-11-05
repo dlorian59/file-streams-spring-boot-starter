@@ -1,0 +1,11 @@
+file-streams:
+  enabled: true
+  limits:
+    profile: attachments
+  s3:
+    bucket: ${ATTACHMENTS_BUCKET}
+    region: ${AWS_REGION}
+  # EN: Keep the generic route disabled: all access goes through the authorized controller.
+  # RU: Общий маршрут выключен: доступ проходит через контроллер с проверкой прав.
+  http:
+    enabled: false

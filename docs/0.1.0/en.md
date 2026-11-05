@@ -1,5 +1,7 @@
 # 0.1.0 — Spring Boot file streams
 
+[Existing application / Существующее приложение](integration-en.md)
+
 [← Versions](../index.md) · [README](../../README.md) · [RU](ru.md)
 
 [Build](#1-build-locally) · [S3](#2-stream-to-s3) · [HTTP](#3-browser-to-java-contract) · [Overrides](#4-reuse-application-beans) · [Run](#5-run-the-paired-browser-and-backend-example) · [Tests and limits](#6-verification-and-boundaries)
