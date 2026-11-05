@@ -84,7 +84,7 @@ const committed = await uploadStream({
 await downloadTo({ url, destination, maxBytes: 512 * 1024 * 1024, signal: stop.signal });
 ```
 
-`file`, `key` and `destination` come from the application; a supported file picker can provide a writable destination. Neither operation needs a whole-file Blob buffer. The [React companion](https://github.com/59Alex/file-streams-react) supplies components/hooks around this API; its repository is currently prepared locally.
+`file`, `key` and `destination` come from the application; a supported file picker can provide a writable destination. Neither operation needs a whole-file Blob buffer. The [React companion](https://github.com/dlorian59/file-streams-react) supplies components/hooks around this API; its repository is currently prepared locally.
 
 On the server the existing adapter calls `ObjectStreams.upload(request, requestBody)` and `ObjectStreams.download(key, rangeHeader)`. The starter does not duplicate those algorithms or JSON serialization.
 

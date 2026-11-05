@@ -35,10 +35,10 @@ publishing {
             pom {
                 name.set("File Streams Spring Boot Starter")
                 description.set("Opt-in Spring Boot integration for continuous file streams")
-                url.set("https://github.com/59Alex/file-streams-spring-boot-starter")
+                url.set("https://github.com/dlorian59/file-streams-spring-boot-starter")
                 licenses { license { name.set("MIT License"); url.set("https://opensource.org/license/mit") } }
-                developers { developer { id.set("59Alex"); name.set("Aleksandr Kashevarov") } }
-                scm { url.set("https://github.com/59Alex/file-streams-spring-boot-starter") }
+                developers { developer { id.set("dlorian59"); name.set("Aleksandr Kashevarov") } }
+                scm { url.set("https://github.com/dlorian59/file-streams-spring-boot-starter") }
             }
         }
     }

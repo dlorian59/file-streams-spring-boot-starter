@@ -74,10 +74,10 @@ The bean lifecycle does not change transfer lifetimes: uploads retain admission 
 
 The endpoint reuses the exact base HTTP contract; it does not introduce upload sessions or multipart/form-data. The [guide's paired TypeScript/Java flow](en.md#3-browser-to-java-contract) is the quick start. Full API inventories and annotated TS/Java files live in the sibling base checkout:
 
-- [Base public API reference](https://github.com/59Alex/file-streams/blob/main/docs/0.1.0/reference-en.md).
-- [TypeScript upload/download/range/errors source](https://github.com/59Alex/file-streams/blob/main/browser/demo/transfer-example.ts).
-- [Java receive/deadline/download-lifetime source](https://github.com/59Alex/file-streams/blob/main/demo/src/main/java/io/github/alex59/filestreams/demo/TransferExamples.java).
-- [React companion](https://github.com/59Alex/file-streams-react); its hooks/components wrap the same browser API.
+- [Base public API reference](https://github.com/dlorian59/file-streams/blob/main/docs/0.1.0/reference-en.md).
+- [TypeScript upload/download/range/errors source](https://github.com/dlorian59/file-streams/blob/main/browser/demo/transfer-example.ts).
+- [Java receive/deadline/download-lifetime source](https://github.com/dlorian59/file-streams/blob/main/demo/src/main/java/io/github/alex59/filestreams/demo/TransferExamples.java).
+- [React companion](https://github.com/dlorian59/file-streams-react); its hooks/components wrap the same browser API.
 
 Remote creation/publication is still pending; locally these files are under `../file-streams` and `../file-streams-react` next to this repository. The navigation links identify their intended repository locations rather than claiming remote availability.
 

@@ -84,7 +84,7 @@ const committed = await uploadStream({
 await downloadTo({ url, destination, maxBytes: 512 * 1024 * 1024, signal: stop.signal });
 ```
 
-`file`, `key` и `destination` предоставляет приложение. Writable destination может дать поддерживаемый браузером файловый picker. Целый Blob для передачи не нужен. [React-компоненты](https://github.com/59Alex/file-streams-react) управляют UI поверх этого API; companion-репозиторий пока подготовлен локально.
+`file`, `key` и `destination` предоставляет приложение. Writable destination может дать поддерживаемый браузером файловый picker. Целый Blob для передачи не нужен. [React-компоненты](https://github.com/dlorian59/file-streams-react) управляют UI поверх этого API; companion-репозиторий пока подготовлен локально.
 
 На Java готовый адаптер вызывает `ObjectStreams.upload(request, requestBody)` и `ObjectStreams.download(key, rangeHeader)`. Starter использует эти алгоритмы и их сериализацию ответа.
 

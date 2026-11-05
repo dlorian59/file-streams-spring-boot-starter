@@ -74,10 +74,10 @@ Starter намеренно не вводит отдельные knobs для AWS
 
 Endpoint использует исходный HTTP-контракт, без дополнительных upload sessions и multipart/form-data. [Парный TS/Java-сценарий](ru.md#3-контракт-браузера-и-java) — быстрый старт. Полный API и комментированные исходники находятся в соседнем checkout:
 
-- [Справочник базового API](https://github.com/59Alex/file-streams/blob/main/docs/0.1.0/reference-ru.md).
-- [TypeScript upload/download/range/errors](https://github.com/59Alex/file-streams/blob/main/browser/demo/transfer-example.ts).
-- [Java receive/deadline/download lifetime](https://github.com/59Alex/file-streams/blob/main/demo/src/main/java/io/github/alex59/filestreams/demo/TransferExamples.java).
-- [React companion](https://github.com/59Alex/file-streams-react): hooks/components поверх того же browser API.
+- [Справочник базового API](https://github.com/dlorian59/file-streams/blob/main/docs/0.1.0/reference-ru.md).
+- [TypeScript upload/download/range/errors](https://github.com/dlorian59/file-streams/blob/main/browser/demo/transfer-example.ts).
+- [Java receive/deadline/download lifetime](https://github.com/dlorian59/file-streams/blob/main/demo/src/main/java/io/github/alex59/filestreams/demo/TransferExamples.java).
+- [React companion](https://github.com/dlorian59/file-streams-react): hooks/components поверх того же browser API.
 
 Удалённое создание/публикация пока не выполнены. Локально файлы лежат в `../file-streams` и `../file-streams-react` рядом с этим репозиторием. Ссылки обозначают целевые адреса репозиториев и не утверждают их удалённую доступность.
 
