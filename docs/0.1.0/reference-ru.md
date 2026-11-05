@@ -79,7 +79,7 @@ Endpoint использует исходный HTTP-контракт, без д�
 - [Java receive/deadline/download lifetime](https://github.com/dlorian59/file-streams/blob/main/demo/src/main/java/io/github/alex59/filestreams/demo/TransferExamples.java).
 - [React companion](https://github.com/dlorian59/file-streams-react): hooks/components поверх того же browser API.
 
-Удалённое создание/публикация пока не выполнены. Локально файлы лежат в `../file-streams` и `../file-streams-react` рядом с этим репозиторием. Ссылки обозначают целевые адреса репозиториев и не утверждают их удалённую доступность.
+Клонируйте `file-streams` и `file-streams-react` рядом с этим репозиторием, чтобы выполнить парные примеры локально. Ссылки выше открывают соответствующие исходники на GitHub. Публикация пакетов в реестрах выполняется отдельно.
 
 | Запрос/результат | Контракт |
 | --- | --- |

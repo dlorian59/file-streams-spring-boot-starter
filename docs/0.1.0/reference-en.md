@@ -79,7 +79,7 @@ The endpoint reuses the exact base HTTP contract; it does not introduce upload s
 - [Java receive/deadline/download-lifetime source](https://github.com/dlorian59/file-streams/blob/main/demo/src/main/java/io/github/alex59/filestreams/demo/TransferExamples.java).
 - [React companion](https://github.com/dlorian59/file-streams-react); its hooks/components wrap the same browser API.
 
-Remote creation/publication is still pending; locally these files are under `../file-streams` and `../file-streams-react` next to this repository. The navigation links identify their intended repository locations rather than claiming remote availability.
+Clone `file-streams` and `file-streams-react` alongside this repository to follow the paired examples locally. The links above open the corresponding source files on GitHub. Registry releases are separate from source availability.
 
 | Request/result | Contract |
 | --- | --- |
